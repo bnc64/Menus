@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#d63347" />
+  <meta name="description" content="Planificador de menús semanal" />
+  <title>Menús Semanales</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <div id="app">
+
+    <!-- CABECERA -->
+    <header>
+      <h1>🍴 Menús</h1>
+
+      <div class="top-tabs">
+        <button class="tab-btn activo" id="btn-nav-calendario">
+          <span class="tab-icon">🗓️</span>
+          <span>Calendario</span>
+        </button>
+        <button class="tab-btn" id="btn-nav-menus">
+          <span class="tab-icon">🍽️</span>
+          <span>Menús</span>
+        </button>
+        <button class="tab-btn" id="btn-nav-ingredientes">
+          <span class="tab-icon">🥦</span>
+          <span>Ingredientes</span>
+        </button>
+        <button class="tab-btn" id="btn-nav-grupos">
+          <span class="tab-icon">🏷️</span>
+          <span>Grupos</span>
+        </button>
+      </div>
+
+      <div class="header-actions">
+        <button id="btn-semana-toggle">Semana siguiente →</button>
+        <button id="btn-compartir">📤 Compartir</button>
+        <button id="btn-nav-crear">✨ Generar</button>
+      </div>
+    </header>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main>
+
+      <section id="seccion-calendario" class="seccion activa">
+        <div class="calendario-card">
+          <div id="calendario-grid"></div>
+        </div>
+      </section>
+
+      <section id="seccion-menus" class="seccion">
+        <div class="seccion-header">
+          <h2>Mis menús</h2>
+          <button class="btn-primario" id="btn-nuevo-menu">+ Nuevo menú</button>
+        </div>
+        <input type="search" class="buscador" id="buscador-menus" placeholder="🔍 Buscar menú…" autocomplete="off" />
+        <div id="lista-menus"></div>
+      </section>
+
+      <section id="seccion-ingredientes" class="seccion">
+        <div class="seccion-header">
+          <h2>Ingredientes</h2>
+          <button class="btn-primario" id="btn-nuevo-ingrediente">+ Añadir</button>
+        </div>
+        <input type="search" class="buscador" id="buscador-ingredientes" placeholder="🔍 Buscar ingrediente…" autocomplete="off" />
+        <div id="lista-ingredientes"></div>
+      </section>
+
+      <!-- SECCIÓN GRUPOS -->
+      <section id="seccion-grupos" class="seccion">
+        <div class="seccion-header">
+          <h2>Grupos alimentarios</h2>
+          <button class="btn-primario" id="btn-nuevo-grupo">+ Nuevo grupo</button>
+        </div>
+        <input type="search" class="buscador" id="buscador-grupos" placeholder="🔍 Buscar grupo…" autocomplete="off" />
+        <p class="grupos-ayuda">Define grupos (pasta, huevo, pescado…) y el intervalo mínimo de días entre platos del mismo grupo.</p>
+        <div id="lista-grupos"></div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- MODAL MENÚ -->
+  <div id="modal-menu" class="modal-overlay" role="dialog" aria-modal="true">
+    <div class="modal-contenido">
+      <div class="modal-header">
+        <h2 id="modal-titulo-menu">Nuevo menú</h2>
+        <button class="btn-cerrar" id="btn-cerrar-modal-menu" aria-label="Cerrar">✕</button>
+      </div>
+      <form id="form-menu" novalidate>
+        <input type="hidden" id="menu-id" />
+        <div class="form-fila">
+          <label for="menu-nombre">Nombre</label>
+          <input type="text" id="menu-nombre" placeholder="Ej: Paella de verduras" required />
+        </div>
+        <div class="form-fila">
+          <label for="menu-ranura">Ranura</label>
+          <select id="menu-ranura">
+            <option value="ambas">Comida y Cena</option>
+            <option value="comida">Solo comida</option>
+            <option value="cena">Solo cena</option>
+            <option value="persistente">Persistente (fijo en un día)</option>
+          </select>
+        </div>
+        <div id="fila-persistente" class="fila-horizontal" style="display:none">
+          <div class="form-fila">
+            <label for="menu-dia-persistente">Día fijo</label>
+            <select id="menu-dia-persistente">
+              <option value="">— Elige —</option>
+              <option value="0">Lunes</option>
+              <option value="1">Martes</option>
+              <option value="2">Miércoles</option>
+              <option value="3">Jueves</option>
+              <option value="4">Viernes</option>
+              <option value="5">Sábado</option>
+              <option value="6">Domingo</option>
+            </select>
+          </div>
+          <div class="form-fila">
+            <label for="menu-ranura-persistente">Ranura</label>
+            <select id="menu-ranura-persistente">
+              <option value="">— Elige —</option>
+              <option value="comida">Comida</option>
+              <option value="cena">Cena</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-fila">
+          <label>Grupos alimentarios (opcional)</label>
+          <div id="menu-grupos-sel"></div>
+        </div>
+        <div class="form-fila">
+          <label for="menu-url">Enlace a la receta (opcional)</label>
+          <input type="url" id="menu-url" placeholder="https://…" />
+        </div>
+
+        <div class="form-fila">
+          <label>Ingredientes</label>
+          <div id="menu-ingredientes-sel"></div>
+        </div>
+        <button type="submit" class="btn-submit">Guardar menú</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL COMPARTIR -->
+  <div id="modal-compartir" class="modal-overlay" role="dialog" aria-modal="true">
+    <div class="modal-contenido">
+      <div class="modal-header">
+        <h2>Compartir datos</h2>
+        <button class="btn-cerrar" id="btn-cerrar-modal-compartir" aria-label="Cerrar">✕</button>
+      </div>
+
+      <!-- Exportar -->
+      <div class="compartir-bloque">
+        <div class="compartir-bloque-titulo">
+          <span class="compartir-icono">📤</span>
+          <div>
+            <strong>Copiar código</strong>
+            <p>Genera un código con todos tus menús e ingredientes para enviarlo a otro dispositivo.</p>
+          </div>
+        </div>
+        <textarea id="export-codigo" class="codigo-area" readonly placeholder="Pulsa el botón para generar…"></textarea>
+        <button class="btn-primario btn-full" id="btn-copiar-codigo">Generar y copiar código</button>
+      </div>
+
+      <div class="compartir-separador">— o —</div>
+
+      <!-- Importar -->
+      <div class="compartir-bloque">
+        <div class="compartir-bloque-titulo">
+          <span class="compartir-icono">📥</span>
+          <div>
+            <strong>Insertar código</strong>
+            <p>Pega aquí un código recibido. <em>Reemplazará todos los datos actuales.</em></p>
+          </div>
+        </div>
+        <textarea id="import-codigo" class="codigo-area" placeholder="Pega el código aquí…"></textarea>
+        <button class="btn-primario btn-full btn-peligro" id="btn-cargar-codigo">Cargar datos</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL INGREDIENTE -->
+  <div id="modal-ingrediente" class="modal-overlay" role="dialog" aria-modal="true">
+    <div class="modal-contenido">
+      <div class="modal-header">
+        <h2>Nuevo ingrediente</h2>
+        <button class="btn-cerrar" id="btn-cerrar-modal-ingrediente" aria-label="Cerrar">✕</button>
+      </div>
+      <form id="form-ingrediente" novalidate>
+        <div class="form-fila">
+          <label for="ing-nombre">Nombre</label>
+          <input type="text" id="ing-nombre" placeholder="Ej: Arroz, Huevo…" autocomplete="off" />
+        </div>
+        <p class="form-error" id="error-ingrediente" style="display:none"></p>
+        <button type="submit" class="btn-submit">Añadir ingrediente</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL GRUPO -->
+  <div id="modal-grupo" class="modal-overlay" role="dialog" aria-modal="true">
+    <div class="modal-contenido">
+      <div class="modal-header">
+        <h2 id="modal-titulo-grupo">Nuevo grupo</h2>
+        <button class="btn-cerrar" id="btn-cerrar-modal-grupo" aria-label="Cerrar">✕</button>
+      </div>
+      <form id="form-grupo" novalidate>
+        <div class="form-fila" id="fila-grupo-nombre">
+          <label for="grupo-nombre">Nombre</label>
+          <input type="text" id="grupo-nombre" placeholder="Ej: Pasta, Huevo, Pescado…" autocomplete="off" />
+        </div>
+        <div class="form-fila">
+          <label for="grupo-intervalo">Intervalo mínimo (días)</label>
+          <input type="number" id="grupo-intervalo" min="1" max="14" value="2" />
+        </div>
+        <p class="form-error" id="error-grupo" style="display:none"></p>
+        <button type="submit" class="btn-submit">Guardar</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="js/storage.js"></script>
+  <script src="js/algoritmo.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
