@@ -741,30 +741,7 @@ main {
 }
 
 /* ============================================================
-   RESPONSIVE — header en dos filas (portrait Y landscape en móvil)
-   ============================================================ */
-@media (max-width: 767px) {
-  header {
-    flex-wrap: wrap;
-    height: auto;
-    padding: 8px 12px 0;
-    gap: 6px;
-  }
-  header h1 { flex: 1; font-size: 0.95rem; }
-  .header-actions { order: 2; gap: 4px; }
-  .top-tabs { order: 3; width: 100%; padding-bottom: 8px; gap: 4px; }
-
-  /* Tabs con texto: repartidos a igual ancho, fuente pequeña */
-  .tab-btn { flex: 1; justify-content: center; padding: 7px 4px; font-size: 0.72rem; gap: 3px; }
-  .tab-btn .tab-icon { font-size: 1rem; }
-
-  /* Botones de acción: texto visible pero compacto */
-  #btn-semana-toggle { font-size: 0.75rem; padding: 6px 8px; }
-  #btn-compartir, #btn-nav-crear { font-size: 0.75rem; padding: 6px 8px; }
-}
-
-/* ============================================================
-   RESPONSIVE — calendario (pantallas pequeñas)
+   RESPONSIVE — calendario pequeño (< 600px)
    ============================================================ */
 @media (max-width: 599px) {
   main { padding: 10px; }
@@ -803,4 +780,29 @@ main {
   .cal-header { font-size: 0.8rem; }
   #calendario-grid { gap: 10px; grid-template-columns: 52px repeat(7, 1fr); }
   .calendario-card { padding: 20px; }
+}
+
+/* ============================================================
+   RESPONSIVE — header con scroll horizontal en móvil (≤ 767px)
+   Colocado al final para sobreescribir los estilos de escritorio
+   ============================================================ */
+@media (max-width: 767px) {
+  header {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    height: var(--header-h);
+    padding: 0 12px;
+    gap: 6px;
+  }
+  header::-webkit-scrollbar { display: none; }
+  header h1 { flex-shrink: 0; }
+  .top-tabs { flex: 0 0 auto; gap: 5px; overflow: visible; }
+  .header-actions { flex-shrink: 0; gap: 5px; margin-left: auto; padding-left: 6px; }
+
+  .tab-btn { flex-shrink: 0; font-size: 0.78rem; padding: 7px 11px; }
+  .tab-btn .tab-icon { font-size: 0.95rem; }
+  #btn-semana-toggle { font-size: 0.76rem; padding: 6px 10px; }
+  #btn-compartir, #btn-nav-crear { font-size: 0.76rem; padding: 6px 10px; }
 }
