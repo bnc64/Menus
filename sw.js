@@ -28,8 +28,17 @@ self.addEventListener('activate', e => {
   self.clients.claim();
 });
 
+// Network-first: intenta obtener el archivo de la red.
+// Si hay conexión, actualiza la caché con la versión fresca.
+// Si no hay conexión (offline), sirve desde caché.
 self.addEventListener('fetch', e => {
   e.respondWith(
-    caches.match(e.request).then(cached => cached || fetch(e.request))
+    fetch(e.request)
+      .then(response => {
+        const copia = response.clone();
+        caches.open(CACHE).then(cache => cache.put(e.request, copia));
+        return response;
+      })
+      .catch(() => caches.match(e.request))
   );
 });
