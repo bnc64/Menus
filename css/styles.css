@@ -27,8 +27,19 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 /* Sin selección de texto ni menú largo-pulsado en móvil */
-* { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
-input, textarea, [contenteditable] { -webkit-user-select: text; user-select: text; }
+html {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+* {
+  -webkit-user-select: inherit;
+  user-select: inherit;
+}
+input, textarea, [contenteditable] {
+  -webkit-user-select: text;
+  user-select: text;
+}
 
 html, body {
   height: 100%;
