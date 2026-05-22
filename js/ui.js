@@ -83,8 +83,8 @@ const UI = {
     const isMobile = window.matchMedia('(max-width: 767px)').matches;
     document.getElementById('btn-semana-toggle').textContent =
       this.semanaVisible === 'semanaActual'
-        ? (isMobile ? '→' : 'Semana siguiente →')
-        : (isMobile ? '←' : '← Esta semana');
+        ? (isMobile ? 'Sig. →' : 'Semana siguiente →')
+        : (isMobile ? '← Ant.' : '← Esta semana');
 
     const grid = document.getElementById('calendario-grid');
     grid.innerHTML = '';

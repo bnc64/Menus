@@ -747,40 +747,34 @@ main {
   header {
     flex-wrap: wrap;
     height: auto;
-    padding: 10px 12px 0;
-    gap: 8px;
+    padding: 8px 12px 0;
+    gap: 6px;
   }
-  header h1 { flex: 1; }
-  .header-actions { order: 2; gap: 5px; }
-  .top-tabs { order: 3; width: 100%; padding-bottom: 10px; }
+  header h1 { flex: 1; font-size: 0.95rem; }
+  .header-actions { order: 2; gap: 4px; }
+  .top-tabs { order: 3; width: 100%; padding-bottom: 8px; gap: 4px; }
 
-  /* Tabs: solo icono, repartidos a igual ancho */
-  .tab-btn span:last-child { display: none; }
-  .tab-btn { flex: 1; justify-content: center; padding: 8px 4px; }
-  .tab-btn .tab-icon { font-size: 1.2rem; }
+  /* Tabs con texto: repartidos a igual ancho, fuente pequeña */
+  .tab-btn { flex: 1; justify-content: center; padding: 7px 4px; font-size: 0.72rem; gap: 3px; }
+  .tab-btn .tab-icon { font-size: 1rem; }
 
-  /* Botones de acción: solo icono */
-  .btn-label { display: none; }
-  #btn-semana-toggle { font-size: 1rem; padding: 7px 12px; }
-  #btn-compartir, #btn-nav-crear { padding: 7px 11px; }
+  /* Botones de acción: texto visible pero compacto */
+  #btn-semana-toggle { font-size: 0.75rem; padding: 6px 8px; }
+  #btn-compartir, #btn-nav-crear { font-size: 0.75rem; padding: 6px 8px; }
 }
 
 /* ============================================================
-   RESPONSIVE — calendario compacto (pantallas pequeñas)
+   RESPONSIVE — calendario (pantallas pequeñas)
    ============================================================ */
 @media (max-width: 599px) {
   main { padding: 10px; }
-  .calendario-card { padding: 10px 8px; border-radius: 14px; flex: 0 0 auto; }
-  #calendario-grid {
-    gap: 4px;
-    grid-template-columns: 28px repeat(7, 1fr);
-    grid-template-rows: auto auto auto;
-  }
-  .cal-row-label { font-size: 0.5rem; letter-spacing: 0.8px; }
-  .cal-celda { padding: 5px 3px; border-radius: 7px; gap: 3px; }
-  .cal-ranura-label { font-size: 0.8rem; }
-  .cal-nombre { font-size: 0.6rem; }
-  .cal-header { font-size: 0.6rem; padding-bottom: 4px; }
+  .calendario-card { padding: 10px 8px; border-radius: 14px; }
+  #calendario-grid { gap: 4px; grid-template-columns: 28px repeat(7, 1fr); }
+  .cal-row-label { font-size: 0.52rem; letter-spacing: 0.5px; }
+  .cal-celda { padding: 7px 3px; border-radius: 7px; gap: 3px; }
+  .cal-ranura-label { font-size: 0.9rem; }
+  .cal-nombre { font-size: 0.68rem; }
+  .cal-header { font-size: 0.65rem; padding-bottom: 4px; }
   .cal-grupo { display: none; }
 }
 
