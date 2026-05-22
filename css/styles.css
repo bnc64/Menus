@@ -741,9 +741,9 @@ main {
 }
 
 /* ============================================================
-   RESPONSIVE — móvil (< 600px)
+   RESPONSIVE — header en dos filas (portrait Y landscape en móvil)
    ============================================================ */
-@media (max-width: 599px) {
+@media (max-width: 767px) {
   header {
     flex-wrap: wrap;
     height: auto;
@@ -751,21 +751,31 @@ main {
     gap: 8px;
   }
   header h1 { flex: 1; }
-  .header-actions { order: 2; gap: 6px; }
+  .header-actions { order: 2; gap: 5px; }
   .top-tabs { order: 3; width: 100%; padding-bottom: 10px; }
 
-  /* En móvil, ocultar texto de los tabs */
+  /* Tabs: solo icono, repartidos a igual ancho */
   .tab-btn span:last-child { display: none; }
-  .tab-btn { padding: 8px 14px; }
+  .tab-btn { flex: 1; justify-content: center; padding: 8px 4px; }
   .tab-btn .tab-icon { font-size: 1.2rem; }
 
-  #btn-semana-toggle { font-size: 0.7rem; padding: 6px 10px; }
-  #btn-compartir span:last-child { display: none; }
-  #btn-compartir { padding: 7px 10px; }
+  /* Botones de acción: solo icono */
+  .btn-label { display: none; }
+  #btn-semana-toggle { font-size: 1rem; padding: 7px 12px; }
+  #btn-compartir, #btn-nav-crear { padding: 7px 11px; }
+}
 
+/* ============================================================
+   RESPONSIVE — calendario compacto (pantallas pequeñas)
+   ============================================================ */
+@media (max-width: 599px) {
   main { padding: 10px; }
-  .calendario-card { padding: 10px 8px; border-radius: 14px; }
-  #calendario-grid { gap: 4px; grid-template-columns: 28px repeat(7, 1fr); }
+  .calendario-card { padding: 10px 8px; border-radius: 14px; flex: 0 0 auto; }
+  #calendario-grid {
+    gap: 4px;
+    grid-template-columns: 28px repeat(7, 1fr);
+    grid-template-rows: auto auto auto;
+  }
   .cal-row-label { font-size: 0.5rem; letter-spacing: 0.8px; }
   .cal-celda { padding: 5px 3px; border-radius: 7px; gap: 3px; }
   .cal-ranura-label { font-size: 0.8rem; }

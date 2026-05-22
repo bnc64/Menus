@@ -80,8 +80,11 @@ const UI = {
     const grupoPorId = {};
     grupos.forEach(g => { grupoPorId[g.id] = g; });
 
+    const isMobile = window.matchMedia('(max-width: 767px)').matches;
     document.getElementById('btn-semana-toggle').textContent =
-      this.semanaVisible === 'semanaActual' ? 'Semana siguiente →' : '← Esta semana';
+      this.semanaVisible === 'semanaActual'
+        ? (isMobile ? '→' : 'Semana siguiente →')
+        : (isMobile ? '←' : '← Esta semana');
 
     const grid = document.getElementById('calendario-grid');
     grid.innerHTML = '';
