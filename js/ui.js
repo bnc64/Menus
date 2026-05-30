@@ -105,14 +105,25 @@ const UI = {
       rowLabel.textContent = ranura === 'comida' ? 'Comida' : 'Cena';
       grid.appendChild(rowLabel);
       DIAS_KEYS.forEach(dia =>
-        grid.appendChild(this._crearCelda(semana[dia][ranura], porId, ranura, grupoPorId))
+        grid.appendChild(this._crearCelda(semana[dia][ranura], porId, ranura, grupoPorId, dia))
       );
     });
   },
 
-  _crearCelda(menuId, porId, ranura, grupoPorId) {
+  _crearCelda(menuId, porId, ranura, grupoPorId, dia) {
     const cell = document.createElement('div');
     cell.className = `cal-celda ${ranura}`;
+
+    // Lápiz para asignar manualmente
+    const btnEditar = document.createElement('button');
+    btnEditar.className = 'cal-editar';
+    btnEditar.textContent = '✎';
+    btnEditar.title = 'Asignar menú';
+    btnEditar.addEventListener('click', e => {
+      e.stopPropagation();
+      this._abrirModalDia(dia, ranura, menuId);
+    });
+    cell.appendChild(btnEditar);
 
     const menu = menuId ? porId[menuId] : null;
     if (menu) {
@@ -271,6 +282,12 @@ const UI = {
     modalIng.addEventListener('click', e => { if (e.target === modalIng) modalIng.classList.remove('abierto'); });
     document.getElementById('form-ingrediente')
       .addEventListener('submit', e => { e.preventDefault(); this._guardarIngrediente(); });
+
+    // Modal asignar día
+    const modalDia = document.getElementById('modal-dia');
+    document.getElementById('btn-cerrar-modal-dia')
+      .addEventListener('click', () => modalDia.classList.remove('abierto'));
+    modalDia.addEventListener('click', e => { if (e.target === modalDia) modalDia.classList.remove('abierto'); });
 
     // Modal grupo
     const modalGrupo = document.getElementById('modal-grupo');
@@ -694,6 +711,64 @@ const UI = {
     Storage.addGrupo(nuevo);
     document.getElementById('modal-grupo').classList.remove('abierto');
     if (this._modalGrupoCallback) this._modalGrupoCallback(nuevo);
+  },
+
+  // ============================================================
+  // MODAL ASIGNAR DÍA
+  // ============================================================
+  _abrirModalDia(dia, ranura, menuActualId) {
+    const menus = Storage.getMenus().filter(m =>
+      m.activo !== false && !m.persistente && (m.ranura === ranura || m.ranura === 'ambas')
+    );
+
+    const diaLabel   = DIAS_LABELS[DIAS_KEYS.indexOf(dia)];
+    const ranuraLabel = ranura === 'comida' ? 'Comida' : 'Cena';
+    document.getElementById('modal-dia-titulo').textContent = `${diaLabel} — ${ranuraLabel}`;
+
+    const lista = document.getElementById('modal-dia-lista');
+    lista.innerHTML = '';
+
+    // Opción: vaciar celda
+    const btnVaciar = document.createElement('button');
+    btnVaciar.className = 'dia-menu-opcion' + (!menuActualId ? ' seleccionado' : '');
+    btnVaciar.innerHTML = '<span class="dia-menu-nombre">· Sin menú</span>';
+    btnVaciar.addEventListener('click', () => this._asignarMenuDia(dia, ranura, null));
+    lista.appendChild(btnVaciar);
+
+    if (menus.length === 0) {
+      const msg = document.createElement('p');
+      msg.className = 'vacio-msg';
+      msg.textContent = 'No hay menús activos para esta ranura.';
+      lista.appendChild(msg);
+    }
+
+    menus.forEach(menu => {
+      const btn = document.createElement('button');
+      btn.className = 'dia-menu-opcion' + (menu.id === menuActualId ? ' seleccionado' : '');
+
+      const nombre = document.createElement('span');
+      nombre.className = 'dia-menu-nombre';
+      nombre.textContent = menu.nombre;
+
+      const tag = document.createElement('span');
+      tag.className = 'dia-menu-ranura';
+      tag.textContent = { comida: 'Solo comida', cena: 'Solo cena', ambas: 'Comida y Cena' }[menu.ranura];
+
+      btn.appendChild(nombre);
+      btn.appendChild(tag);
+      btn.addEventListener('click', () => this._asignarMenuDia(dia, ranura, menu.id));
+      lista.appendChild(btn);
+    });
+
+    document.getElementById('modal-dia').classList.add('abierto');
+  },
+
+  _asignarMenuDia(dia, ranura, menuId) {
+    const calendario = Storage.getCalendario();
+    calendario[this.semanaVisible][dia][ranura] = menuId;
+    Storage.saveCalendario(calendario);
+    document.getElementById('modal-dia').classList.remove('abierto');
+    this.renderCalendario();
   },
 
   // ============================================================
